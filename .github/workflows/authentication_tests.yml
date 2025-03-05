@@ -53,4 +53,4 @@ jobs:
       - name: Run Authentication tests
         run: |
           source venv/bin/activate
-          python manage.py test accounts
+          python manage.py test fitlog.accounts
