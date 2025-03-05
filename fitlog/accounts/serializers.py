@@ -11,8 +11,18 @@ class UserSerializer(serializers.ModelSerializer):
         model = UserModel
         fields = ['username', 'email', 'password']
 
-
     def create(self, validated_data):
         user = UserModel.objects.create_user(**validated_data)
         # this will hash the password
         return user
+
+
+class LoginRequestSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
+
+
+class LoginResponseSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
+    access = serializers.CharField()
+    message = serializers.CharField()
