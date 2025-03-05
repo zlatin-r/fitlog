@@ -1,0 +1,55 @@
+name: Run Authentication Tests
+
+on:
+  push:
+    branches:
+      - testing  # Run tests on push to testing
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"  # Adjust based on your project
+
+      - name: Install dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run migrations
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+        run: |
+          source venv/bin/activate
+          python manage.py migrate
+
+      - name: Run Authentication tests
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+        run: |
+          source venv/bin/activate
+          python manage.py test accounts
