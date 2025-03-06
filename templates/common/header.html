@@ -1,3 +1,17 @@
+{% load static %}
+
 <header class="header-container">
     <h1>FitLog - Your Fitness Tracker</h1>
+    <nav class="auth-buttons">
+        <ul>
+            {% if user.is_authenticated %}
+                <li><a href="#" id="logout-link">Logout</a></li>
+            {% else %}
+                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="#">Register</a></li>
+            {% endif %}
+        </ul>
+    </nav>
 </header>
+
+<script src="{% static 'js/authentication-js/logout.js' %}"></script>
