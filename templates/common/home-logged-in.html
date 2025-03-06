@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Home - Logged In{% endblock %}
 
 {% block content %}
+    <div class="home-container">
+        <h1>Welcome Back!</h1>
+        <p>You are logged in. Enjoy tracking your workouts!</p>
+        <a href="{% url 'logout' %}" class="btn logout-btn">Logout</a>
+    </div>
 {% endblock %}
-
 

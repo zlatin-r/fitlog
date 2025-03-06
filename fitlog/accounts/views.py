@@ -1,6 +1,5 @@
 from http.client import responses
 
-
 from django.contrib.auth import get_user_model, authenticate
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
@@ -74,7 +73,7 @@ class LogoutApiView(APIView):
             token = RefreshToken(refresh_token)
             token.blacklist()
             return Response({
-               "message": "Logout successful",
+                "message": "Logout successful",
             }, status=status.HTTP_200_OK)
         except TokenError:
             return Response({
