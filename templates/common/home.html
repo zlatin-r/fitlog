@@ -1,15 +1,28 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 
-    <div class="main-container">
-        <h1>This is the main</h1>
+    <div class="container">
+        <!-- Login Form -->
+        <div id="login-form">
+            <h2>Login</h2>
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button onclick="login()">Login</button>
+            <div id="login-message" class="message"></div>
+        </div>
 
-        {% if user.is_authenticated %}
-            <p>Welcome, {{ user.username }}!</p>
-        {% else %}
-            <p>You are not authenticated</p>
-        {% endif %}
+        <!-- Logout Button (hidden by default) -->
+        <div id="logout-section" style="display: none;">
+            <h2>Welcome, <span id="logged-in-user"></span></h2>
+            <button onclick="logout()">Logout</button>
+            <div id="logout-message" class="message"></div>
+        </div>
     </div>
+
+    <script src="{% static 'js/authentication-js/auth.js' %}"></script>
+
+
 
 {% endblock %}

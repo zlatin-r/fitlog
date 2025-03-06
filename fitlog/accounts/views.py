@@ -1,4 +1,9 @@
-from django.contrib.auth import get_user_model, authenticate
+import json
+
+from django.contrib.auth import get_user_model, authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.generics import CreateAPIView
@@ -77,3 +82,30 @@ class LogoutApiView(APIView):
             return Response({
                 "error": "Invalid or expired token"
             }, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@csrf_exempt
+def user_login(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            username = data.get('username')
+            password = data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)  # This creates the session
+                return JsonResponse({'message': 'Login successful!'})
+            else:
+                return JsonResponse({'error': 'Invalid credentials'}, status=400)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+@csrf_exempt
+@login_required  # Ensure the user is logged in to access this view
+def user_logout(request):
+    if request.method == 'POST':
+        logout(request)
+        return JsonResponse({'message': 'Logout successful!'})
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
