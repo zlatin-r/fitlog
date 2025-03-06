@@ -1,10 +1,8 @@
-from http.client import responses
-
 from django.contrib.auth import get_user_model, authenticate
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.generics import CreateAPIView
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import TokenError
@@ -16,7 +14,7 @@ from fitlog.accounts.serializers import UserSerializer, LoginRequestSerializer, 
 UserModel = get_user_model()
 
 
-class RegisterView(CreateAPIView):
+class RegisterAPIView(CreateAPIView):
     queryset = UserModel
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
@@ -32,7 +30,7 @@ class RegisterView(CreateAPIView):
         401: "Invalid username or password"
     }
 )
-class LogingView(APIView):
+class LoginAPIView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
