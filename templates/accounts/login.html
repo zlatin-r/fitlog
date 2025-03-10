@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+    
     <h2>Login</h2>
     <form id="login-form" method="POST">
         {% csrf_token %}
@@ -15,34 +16,43 @@
     </form>
 
     <p id="message"></p>
-{% endblock %}
 
 
-<script>
-    document.getElementById('login-form').addEventListener('submit', async function (event) {
-        event.preventDefault();
+    <script>
+        console.log("JavaScript is running!");  // Add this line to verify the script is executed
 
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
+        document.getElementById('login-form').addEventListener('submit', async function (event) {
+            event.preventDefault();  // Prevent the default form submission
 
-        const response = await fetch('/auth/api-login/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-            },
-            body: JSON.stringify({username, password})
+            console.log("Form submitted!");  // Add this line to verify the form submission is intercepted
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/auth/login/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: JSON.stringify({username, password})
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('access', data.access);
+                    localStorage.setItem('refresh', data.refresh);
+                    document.getElementById('message').innerText = 'Login successful!';
+                    window.location.href = '/';  // Redirect to homepage or dashboard
+                } else {
+                    document.getElementById('message').innerText = data.error || 'Login failed';
+                }
+            } catch (error) {
+                document.getElementById('message').innerText = 'An error occurred. Please try again.';
+            }
         });
+    </script>
 
-        const data = await response.json();
-
-        if (response.ok) {
-            localStorage.setItem('access', data.access);
-            localStorage.setItem('refresh', data.refresh);
-            document.getElementById('message').innerText = 'Login successful!';
-            window.location.href = '/';  // Redirect to homepage or dashboard
-        } else {
-            document.getElementById('message').innerText = data.error || 'Login failed';
-        }
-    });
-</script>
+{% endblock %}
