@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <button id="logout-btn">Logout</button>
+    <p id="message"></p>
+{% endblock %}
+
+<script>
+    document.getElementById('logout-btn').addEventListener('click', async function () {
+        const refresh = localStorage.getItem('refresh');
+
+        if (!refresh) {
+            document.getElementById('message').innerText = 'No user is logged in!';
+            return;
+        }
+
+        const response = await fetch('/auth/api-logout/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({refresh})
+        });
+
+        if (response.ok) {
+            localStorage.removeItem('access');
+            localStorage.removeItem('refresh');
+            document.getElementById('message').innerText = 'Logged out successfully!';
+            window.location.href = '/auth/login/';
+        } else {
+            document.getElementById('message').innerText = 'Logout failed!';
+        }
+    });
+</script>

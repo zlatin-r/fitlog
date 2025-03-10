@@ -120,28 +120,3 @@ def user_register(request):
         return redirect('login')  # Redirect to login page after successful registration
 
     return render(request, 'accounts/register.html')
-
-# @csrf_exempt
-# def user_login(request):
-#     if request.method == 'POST':
-#         try:
-#             data = json.loads(request.body)
-#             username = data.get('username')
-#             password = data.get('password')
-#             user = authenticate(request, username=username, password=password)
-#             if user is not None:
-#                 login(request, user)  # This creates the session
-#                 return JsonResponse({'message': 'Login successful!'})
-#             else:
-#                 return JsonResponse({'error': 'Invalid credentials'}, status=400)
-#         except json.JSONDecodeError:
-#             return JsonResponse({'error': 'Invalid JSON data'}, status=400)
-#     return JsonResponse({'error': 'Invalid request method'}, status=405)
-#
-# @csrf_exempt
-# @login_required  # Ensure the user is logged in to access this view
-# def user_logout(request):
-#     if request.method == 'POST':
-#         logout(request)
-#         return JsonResponse({'message': 'Logout successful!'})
-#     return JsonResponse({'error': 'Invalid request method'}, status=405)

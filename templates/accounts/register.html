@@ -2,8 +2,9 @@
 {% load static %}
 
 {% block content %}
+
     <h2>Register</h2>
-    <form method="post">
+    <form id="register-form">
         {% csrf_token %}
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>
@@ -19,4 +20,43 @@
         <br>
         <button type="submit">Register</button>
     </form>
+
+    <p id="message"></p>
+
 {% endblock %}
+
+<script>
+    document.getElementById('register-form').addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const password2 = document.getElementById('password2').value;
+
+        if (password !== password2) {
+            document.getElementById('message').innerText = 'Passwords do not match!';
+            return;
+        }
+
+        const response = await fetch('/auth/api-register/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({username, email, password})
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            document.getElementById('message').innerText = 'Registration successful! Redirecting...';
+            setTimeout(() => {
+                window.location.href = '/auth/login/';
+            }, 2000);
+        } else {
+            document.getElementById('message').innerText = data.error || 'Registration failed';
+        }
+    });
+</script>
