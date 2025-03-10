@@ -2,5 +2,7 @@
 {% load static %}
 
 {% block content %}
+    <a href="{% url 'login' %}">Login</a>
     <h1>This is the home page</h1>
+    <h1>Is user auth: {{ user.is_authenticated }}</h1>
 {% endblock %}
