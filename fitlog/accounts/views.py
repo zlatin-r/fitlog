@@ -89,39 +89,3 @@ class LogoutApiView(APIView):
             return Response({
                 "error": "Invalid or expired token"
             }, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
-
-# def user_login(request):
-#     if request.method == 'POST':
-#         username = request.POST['username']
-#         password = request.POST['password']
-#         user = authenticate(request, username=username, password=password)
-#         if user is not None:
-#             login(request, user)
-#             return redirect('home')  # Redirect to homepage or dashboard
-#         else:
-#             return render(request, 'accounts/login.html', {'error': 'Invalid credentials'})
-#
-#     return render(request, 'accounts/login.html')
-#
-#
-# def user_register(request):
-#     if request.method == 'POST':
-#         username = request.POST['username']
-#         email = request.POST['email']
-#         password = request.POST['password']
-#         password2 = request.POST['password2']
-#
-#         if password != password2:
-#             return render(request, 'accounts/register.html', {'error': 'Passwords do not match'})
-#
-#         if User.objects.filter(username=username).exists():
-#             return render(request, 'accounts/register.html', {'error': 'Username already exists'})
-#
-#         user = User.objects.create_user(username=username, email=email, password=password)
-#         return redirect('login')  # Redirect to login page after successful registration
-#
-#     return render(request, 'accounts/register.html')
