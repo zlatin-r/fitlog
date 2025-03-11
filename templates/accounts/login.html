@@ -2,7 +2,6 @@
 {% load static %}
 
 {% block content %}
-    
     <h2>Login</h2>
     <form id="login-form" method="POST">
         {% csrf_token %}
@@ -17,14 +16,9 @@
 
     <p id="message"></p>
 
-
     <script>
-        console.log("JavaScript is running!");  // Add this line to verify the script is executed
-
         document.getElementById('login-form').addEventListener('submit', async function (event) {
             event.preventDefault();  // Prevent the default form submission
-
-            console.log("Form submitted!");  // Add this line to verify the form submission is intercepted
 
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
@@ -36,7 +30,7 @@
                         'Content-Type': 'application/json',
                         'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
                     },
-                    body: JSON.stringify({username, password})
+                    body: JSON.stringify({ username, password })
                 });
 
                 const data = await response.json();
@@ -54,5 +48,4 @@
             }
         });
     </script>
-
 {% endblock %}

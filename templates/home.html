@@ -2,8 +2,47 @@
 {% load static %}
 
 {% block content %}
-    <a href="{% url 'login' %}">Login</a>
+    <a href="{% url 'login-page' %}">Login</a>
     <h1>This is the home page</h1>
-    <h1>Is user auth: {{ user.is_authenticated }}</h1>
-    <h1>Username: {{ user.username }}</h1>
+    <h1 id="auth-status">Is user authenticated: Loading...</h1>
+    <h1 id="username">Username: Loading...</h1>
+
+    <script>
+        // Fetch user details using the JWT token
+        async function fetchUserDetails() {
+            const accessToken = localStorage.getItem('access');
+
+            if (!accessToken) {
+                document.getElementById('auth-status').innerText = 'Is user authenticated: False';
+                document.getElementById('username').innerText = 'Username: Not logged in';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/user-details/', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('auth-status').innerText = `Is user authenticated: True`;
+                    document.getElementById('username').innerText = `Username: ${data.username}`;
+                } else {
+                    document.getElementById('auth-status').innerText = 'Is user authenticated: False';
+                    document.getElementById('username').innerText = 'Username: Not logged in';
+                }
+            } catch (error) {
+                document.getElementById('auth-status').innerText = 'Is user authenticated: False';
+                document.getElementById('username').innerText = 'Username: Not logged in';
+            }
+        }
+
+        // Call the function when the page loads
+        fetchUserDetails();
+    </script>
 {% endblock %}
